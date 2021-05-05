@@ -1,0 +1,1 @@
+get /lamp0/var/log/apache/access.log /home/yman/gandi_logs/access.log

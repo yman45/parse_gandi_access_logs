@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+WDIR="/home/yman/gandi_logs"
+BATCHFILE="${WDIR}/gandi.batch"
+KEYFILE="/home/yman/.ssh/id_ed25519"
+PYTHON_BIN="/usr/bin/python3"
+PYTHON_SCRIPT="${WDIR}/parse_log.py"
+SFTP_BIN="/usr/bin/sftp"
+LOCAL_LOGFILE="${WDIR}/access.log"
+REMOTE_LOGFILE="/lamp0/var/log/apache/access.log"
+REMOTE_USERNAME="2803909"
+REMOTE_HOSTNAME="sftp.dc2.gpaas.net"
+
+rm -f "$LOCAL_LOGFILE"
+"$SFTP_BIN" -i "$KEYFILE" -b "$BATCHFILE" "$REMOTE_USERNAME"@"$REMOTE_HOSTNAME"
+"$PYTHON_BIN" "$PYTHON_SCRIPT"
