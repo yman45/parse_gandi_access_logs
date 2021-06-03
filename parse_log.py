@@ -15,7 +15,8 @@ FILE_LOCATION = "/home/yman/gandi_logs/access.log"
 JUNK_AGENTS = frozenset([
     "googlebot", "wordpress", "yandexbot", "bingbot", "petalbot", "dotbot",
     "internal dummy connection", "semrushbot", "bytespider", "barkrowler",
-    "telegrambot", "seznambot", "ccbot", "amazonbot"
+    "telegrambot", "seznambot", "ccbot", "amazonbot", "mail.ru_bot",
+    "go-http-client", "scaninfo@paloaltonetworks.com", "mauibot"
 ])
 LOG_REGEX = re.compile(r"""(?:\S+)\s             # server name
                        (?P<clip>[0-9a-f:.]+)     # remote IP
