@@ -17,7 +17,8 @@ JUNK_AGENTS = frozenset([
     "internal dummy connection", "semrushbot", "bytespider", "barkrowler",
     "telegrambot", "seznambot", "ccbot", "amazonbot", "mail.ru_bot",
     "go-http-client", "scaninfo@paloaltonetworks.com", "mauibot", "smtbot",
-    "thinkbot", "go http package", "netsystemsresearch.com", "mj12bot"
+    "thinkbot", "go http package", "netsystemsresearch.com", "mj12bot",
+    "detectproxy", "neevabot", "duckduckgo-favicons-bot"
 ])
 LOG_REGEX = re.compile(r"""(?:\S+)\s             # server name
                        (?P<clip>[0-9a-f:.]+)     # remote IP
