@@ -12,14 +12,11 @@ PerDayDict = Dict[str, ResultData]
 ResultDict = Dict[str, PerDayDict]
 
 FILE_LOCATION = "/home/yman/gandi_logs/access.log"
-JUNK_AGENTS = frozenset([
-    "googlebot", "wordpress", "yandexbot", "bingbot", "petalbot", "dotbot",
-    "internal dummy connection", "semrushbot", "bytespider", "barkrowler",
-    "telegrambot", "seznambot", "ccbot", "amazonbot", "mail.ru_bot",
-    "go-http-client", "scaninfo@paloaltonetworks.com", "mauibot", "smtbot",
-    "thinkbot", "go http package", "netsystemsresearch.com", "mj12bot",
-    "detectproxy", "neevabot", "duckduckgo-favicons-bot"
-])
+JUNK_QUERIES = frozenset(["robots.txt", "detectproxy", "wp-",
+    "preview=true", "internal dummy connection", "xmlrpc", "favicon"])
+JUNK_AGENTS = frozenset(["wordpress", "bytespider", "barkrowler",
+    "go-http-client", "scaninfo@paloaltonetworks.com", "go http package",
+    "netsystemsresearch.com", "favicon"])
 LOG_REGEX = re.compile(r"""(?:\S+)\s             # server name
                        (?P<clip>[0-9a-f:.]+)     # remote IP
                        \s-\s-\s                  # remote logname + user
@@ -34,10 +31,15 @@ SENDER = "parser@yman.site"
 RECEIVER = "yman@protonmail.ch"
 
 
-def agent_is_junk(agent: str) -> bool:
+def is_junk_request(request: str, agent: str) -> bool:
     """Filter user-agents that contain line from 'junk_agents' list, i.e. bots
     and some misc stuff."""
+    request = request.lower()
     agent = agent.lower()
+    if any(word in request for word in JUNK_QUERIES):
+        return True
+    if re.search(r"bot\W", agent):
+        return True
     if any(word in agent for word in JUNK_AGENTS):
         return True
     return False
@@ -58,10 +60,7 @@ def parse_access_log(file_location: str) -> ResultDict:
              uagent) = match_result.groups()
             status_code = int(status_code)
             # filter bots and maintenance requests
-            if agent_is_junk(uagent):
-                continue
-            # filter additional data downloads and bogus requests
-            if "wp-" in request or "xmlrpc" in request or "favicon" in request:
+            if is_junk_request(request, uagent):
                 continue
             # filter not successful status codes
             if status_code < 200 or status_code > 299:
